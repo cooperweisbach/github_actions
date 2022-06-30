@@ -122,3 +122,12 @@ jobs:
                return artifact.name == "log_steps"
              })[0];
              console.log(matchArtifact);
+                    
+  runs_regardless:
+      if: ${{always()}}
+      needs: [run_on_failure, run_on_success]
+      runs-on: ubuntu-latest
+      steps:
+        - name: First
+          run: |
+            echo Always
