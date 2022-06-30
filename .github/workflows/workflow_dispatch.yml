@@ -37,6 +37,8 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+          ls
+          pwd
           
       - name: Log 2nd Critical Step
         run: | 
