@@ -4,6 +4,8 @@ on:
     inputs:
       environment:
         type: choice
+        required: true
+        options:
           - dev
           - qa
           - stg
