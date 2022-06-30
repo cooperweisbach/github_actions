@@ -26,8 +26,8 @@ jobs:
 
       - name: Log 1st Critical Step
         run: | 
-          touch log_steps > ./artifacts
-          echo "Step 1" >> log_steps
+          mkdir -p ./artifacts
+          echo "Step 1" >> ./artifacts/log_steps
       - uses: actions/upload-artifact@v3
         with: 
           name: log_steps
@@ -40,7 +40,7 @@ jobs:
           
       - name: Log 2nd Critical Step
         run: | 
-          echo "Step 2" >> log_steps
+          echo "Step 2" >> ./artifacts/log_steps
       - uses: actions/upload-artifact@v3
         with: 
           name: log_steps
