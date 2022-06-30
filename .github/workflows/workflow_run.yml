@@ -38,7 +38,7 @@ jobs:
         with: 
           script: | 
             let fs = require('fs');
-            let logs = fs.readFileSync('./log_steps');
+            let logs = fs.readFileSync('.artifacts/log_steps');
             console.log(logs);
             console.log("Failure");
       - name: delete-artifact
@@ -93,7 +93,7 @@ jobs:
         with: 
           script: | 
             let fs = require('fs');
-            let logs = fs.readFileSync('./log_steps');
+            let logs = fs.readFileSync('.artifacts/log_steps');
             console.log(logs);
             console.log("Success");   
       - name: delete-artifact
