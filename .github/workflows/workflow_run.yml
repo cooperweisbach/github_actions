@@ -84,7 +84,9 @@ jobs:
             let fs = require('fs');
             fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/log_steps.zip`, Buffer.from(download.data));
       - name: 'Unzip artifact'
-        run: unzip log_steps.zip
+        run: |
+          unzip log_steps.zip
+          ls
         
       - name: 'Go through logs'
         uses: actions/github-script@v6
