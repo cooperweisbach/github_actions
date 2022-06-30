@@ -41,7 +41,24 @@ jobs:
             let logs = fs.readFileSync('./log_steps');
             console.log(logs);
             console.log("Failure");
-    
+      - name: delete-artifact
+        uses: actions/github-script@v6
+        with:
+          script: | 
+            let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.payload.workflow_run.id,
+            });
+            let matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "log_steps"
+            })[0];
+            let deleted = await github.rest.actions.deleteArtifact({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               artifact_id: matchArtifact.id
+            });
+            
   run_on_success:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
@@ -76,4 +93,21 @@ jobs:
             let fs = require('fs');
             let logs = fs.readFileSync('./log_steps');
             console.log(logs);
-            console.log("Success");
+            console.log("Success");   
+      - name: delete-artifact
+        uses: actions/github-script@v6
+        with:
+         script: | 
+             let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               run_id: context.payload.workflow_run.id,
+             });
+             let matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
+               return artifact.name == "log_steps"
+             })[0];
+             let deleted = await github.rest.actions.deleteArtifact({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                artifact_id: matchArtifact.id
+             });
