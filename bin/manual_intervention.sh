@@ -12,13 +12,13 @@ function usage {
 }
 
 function create_issue {
-    curl \
+    curl --silent \
       -X POST \
       -H "Accept: application/vnd.github.v3+json" \
       -H "Authorization: token ${GITHUB_TOKEN}"
       https://api.github.com/repos/cooperweisbach/github_actions/issues \
       -d '{"title":"Manual Validation - SSM Update","body":"This issue was created to include manual validation in the process to update SSM parameters", "assignees":["${TRIGGERED_BY}"]}' |
-      grep -fw - 'number:' | awk -F ':' '{print $2}' | sed 's/ *//g' | sed 's/,//g'
+      grep number | awk -F ':' '{print $2}' | sed 's/ *//g' | sed 's/,//g'
 }      
 
 function poll_for_resolution {
