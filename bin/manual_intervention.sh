@@ -23,24 +23,49 @@ function create_issue {
 
 function poll_for_resolution {
     echo $1
-    local resolved=false
+    local resolved=open
     local iterator=0
-     while [[ ! resolved ]]
+     while [[ resolved!=closed ]]
      do
       sleep 15s
-      curl \
+      resolved=$( curl --silent \
       -H "Accept: application/vnd.github.v3+json" \
       -H "Authorization: token ${GITHUB_TOKEN}"
       https://api.github.com/repos/cooperweisbach/github_actions/issues/$1 |
-      grep -fw - 'state:' | awk -F ':' '{print $2}' | sed 's/ *//g' | sed 's/,//g'
+      grep -w 'state:' | awk -F ':' '{print $2}' | sed 's/ *//g' | sed 's/,//g' | sed 's/"//g' )
       
-      iterator++
+      iterator=$( expr $iterator + 1 )
+      echo "$( expr $iterator * 15 ) 
       if [[ iterator = 20 ]]; then
         echo "Manual action timed out...issue wasn't resolved in under 5 minutes"
         exit 255
       fi
       done
 }
+
+
+while [[ $# -gt 0 ]]
+do
+    key="$1"
+    case $key in
+        --github-token|-g)
+            readonly GITHUB_TOKEN="$2"
+            shift # past argument
+        ;;
+        --triggered-by|-t)
+            readonly TRIGGERED_BY="$2"
+            shift # past argument
+        ;;
+        *)
+            echo "Unknown parameter ${key}"
+            usage
+            exit 2
+        ;;
+    esac
+    shift # past argument or value
+done
+
+
 
 global_issue_number=create_issue
 poll_for_resolution global_issue_number
