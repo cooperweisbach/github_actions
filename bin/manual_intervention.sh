@@ -25,8 +25,8 @@ function poll_for_resolution {
     echo $1
     local resolved=open
     local iterator=0
-     while [[ resolved!=closed ]]
-     do
+    while [[ resolved != closed ]]
+    do
        sleep 15s
        resolved=$( curl --silent \
        -H "Accept: application/vnd.github.v3+json" \
@@ -35,12 +35,12 @@ function poll_for_resolution {
        grep -w 'state:' | awk -F ':' '{print $2}' | sed 's/ *//g' | sed 's/,//g' | sed 's/"//g' )
        
        iterator=$( expr $iterator + 1 )
-       echo "$( expr $iterator * 15 ) 
-       if [[ iterator = 20 ]]; then
+       echo "$( expr $iterator * 15 ) seconds"
+       if [ iterator = 20 ]; then
          echo "Manual action timed out...issue wasn't resolved in under 5 minutes"
          exit 255
        fi
-     done
+    done
 }
 
 
