@@ -67,5 +67,5 @@ done
 
 
 
-global_issue_number=create_issue
+global_issue_number=$( create_issue )
 poll_for_resolution global_issue_number
