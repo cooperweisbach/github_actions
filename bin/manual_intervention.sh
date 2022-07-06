@@ -27,20 +27,20 @@ function poll_for_resolution {
     local iterator=0
      while [[ resolved!=closed ]]
      do
-      sleep 15s
-      resolved=$( curl --silent \
-      -H "Accept: application/vnd.github.v3+json" \
-      -H "Authorization: token ${GITHUB_TOKEN}"
-      https://api.github.com/repos/cooperweisbach/github_actions/issues/$1 |
-      grep -w 'state:' | awk -F ':' '{print $2}' | sed 's/ *//g' | sed 's/,//g' | sed 's/"//g' )
-      
-      iterator=$( expr $iterator + 1 )
-      echo "$( expr $iterator * 15 ) 
-      if [[ iterator = 20 ]]; then
-        echo "Manual action timed out...issue wasn't resolved in under 5 minutes"
-        exit 255
-      fi
-      done
+       sleep 15s
+       resolved=$( curl --silent \
+       -H "Accept: application/vnd.github.v3+json" \
+       -H "Authorization: token ${GITHUB_TOKEN}"
+       https://api.github.com/repos/cooperweisbach/github_actions/issues/$1 |
+       grep -w 'state:' | awk -F ':' '{print $2}' | sed 's/ *//g' | sed 's/,//g' | sed 's/"//g' )
+       
+       iterator=$( expr $iterator + 1 )
+       echo "$( expr $iterator * 15 ) 
+       if [[ iterator = 20 ]]; then
+         echo "Manual action timed out...issue wasn't resolved in under 5 minutes"
+         exit 255
+       fi
+     done
 }
 
 
