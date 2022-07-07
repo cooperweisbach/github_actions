@@ -21,11 +21,7 @@ jobs:
               attempt_number: context.payload.workflow_run.run_attempt
             })
             console.log(workflowRunJobs.data.jobs);
-            let url = context.payload.workflow_run.jobs_url;
-            let jobsOutput = url.split(".com")[1];
-            console.log(jobsOutput);
-            let stepsOutput = jobsOutput["steps"];
-            console.log(stepsOutput);
+            console.log(workflowRunJobs.data.jobs.steps);
 #            core.setOutput('stepsOutput', stepsOutput);
             
             
