@@ -17,7 +17,7 @@ jobs:
             let workflowRunJobs = await github.rest.actions.listJobsForWorkflowRunAttempt({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              run_id: context.payload.workflow_run.id
+              run_id: context.payload.workflow_run.id,
               attempt_number: context.payload.workflow_run.run_attempt
             })
             console.log(workflowRunJobs);
