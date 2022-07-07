@@ -6,11 +6,12 @@ on:
       - completed
       
 jobs:
-  run_on_failure:
-    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+  run_to_initialize:
     runs-on: ubuntu-latest
+    outputs:
+      artifact_id: ${{ steps.initialize_artifacts.outputs.artifact_id }}
     steps:
-      - name: 'Get Artifacts'
+      - name: initialize_artifacts
         uses: actions/github-script@v6
         with:
           script: | 
@@ -28,8 +29,36 @@ jobs:
               artifact_id: matchArtifact.id,
               archive_format: 'zip',
             });
+            console.log("Context Log");
+            console.log(context);
+            core.setOutput('artifact_id', matchArtifact.id);
             let fs = require('fs');
             fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/log_steps.zip`, Buffer.from(download.data));
+  run_on_failure:
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    needs: [run_to_initialize]
+    runs-on: ubuntu-latest
+    steps:
+#       - name: 'Get Artifacts'
+#         uses: actions/github-script@v6
+#         with:
+#           script: | 
+#             let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
+#               owner: context.repo.owner,
+#               repo: context.repo.repo,
+#               run_id: context.payload.workflow_run.id,
+#             });
+#             let matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
+#               return artifact.name == "log_steps"
+#             })[0];
+#             let download = await github.rest.actions.downloadArtifact({
+#               owner: context.repo.owner,
+#               repo: context.repo.repo,
+#               artifact_id: matchArtifact.id,
+#               archive_format: 'zip',
+#             });
+#             let fs = require('fs');
+#             fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/log_steps.zip`, Buffer.from(download.data));
       - name: 'Unzip artifact'
         run: unzip log_steps.zip
         
@@ -38,38 +67,37 @@ jobs:
         with: 
           script: | 
             let fs = require('fs');
-            let logs = fs.readFileSync('./log_steps');
-            console.log(logs);
-            console.log("Failure");
+            let logs = String(fs.readFileSync('./log_steps'));
+            console.log("Failure");   
             
   run_on_success:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    needs: [run_to_initialize]
     runs-on: ubuntu-latest
-    outputs:
-      output1: ${{ steps.get_artifacts.outputs.artifact_id }}
-      output2: ${{ steps.g}}
+#     outputs:
+#       output1: ${{ steps.get_artifacts.outputs.artifact_id }}
     steps:
-      - name: get_artifacts
-        uses: actions/github-script@v6
-        with:
-          script: | 
-            let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              run_id: context.payload.workflow_run.id,
-            });
-            let matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
-              return artifact.name == "log_steps"
-            })[0];
-            let download = await github.rest.actions.downloadArtifact({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              artifact_id: matchArtifact.id,
-              archive_format: 'zip',
-            });
-            core.setOutput('artifact_id', matchArtifact.id);
-            let fs = require('fs');
-            fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/log_steps.zip`, Buffer.from(download.data));
+#       - name: get_artifacts
+#         uses: actions/github-script@v6
+#         with:
+#           script: | 
+#             let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
+#               owner: context.repo.owner,
+#               repo: context.repo.repo,
+#               run_id: context.payload.workflow_run.id,
+#             });
+#             let matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
+#               return artifact.name == "log_steps"
+#             })[0];
+#             let download = await github.rest.actions.downloadArtifact({
+#               owner: context.repo.owner,
+#               repo: context.repo.repo,
+#               artifact_id: matchArtifact.id,
+#               archive_format: 'zip',
+#             });
+#             core.setOutput('artifact_id', matchArtifact.id);
+#             let fs = require('fs');
+#             fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/log_steps.zip`, Buffer.from(download.data));
       - name: 'Unzip artifact'
         run: |
           unzip log_steps.zip
@@ -84,7 +112,7 @@ jobs:
                     
   runs_regardless:
       if: ${{always()}}
-      needs: [run_on_failure, run_on_success]
+      needs: [run_on_failure, run_on_success, run_to_initialize]
       runs-on: ubuntu-latest
       steps:
       - name: delete-artifact
@@ -94,7 +122,7 @@ jobs:
              let deleted = await github.rest.actions.deleteArtifact({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                artifact_id: ------- 
+                artifact_id: ${{ needs.run_to_initialize.outputs.artifact_id }}
              });
              allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
                owner: context.repo.owner,
