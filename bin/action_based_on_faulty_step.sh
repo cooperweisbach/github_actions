@@ -7,6 +7,8 @@ function usage {
   echo "Action Based On Faulty Step <-s> <-c>"
   echo "-s | --step : Required. The name of the faulty step."
   echo "-c | --conclusion : Required. The conclusion of the faulty step. Will be either \'cancelled\' or \'failed\'."
+  echo "-e | --environment : Required. The environment that was supposed to be updated."
+  echo "-a | --applications : Required. The applications that were supposed to be updated."
   echo "? : Usage function called. "
   exit 255
 }
@@ -19,20 +21,20 @@ function determine_action {
        stop_ecs)
             echo "Failed Stop ECS"
             if [ "$stepConclusion" == "cancelled" ]; then
-                bin/update_ecs_desired_count.sh -e ${{ github.event.inputs.environment }} -a ${{ github.event.inputs.applications }}  -m restore
+                bin/update_ecs_desired_count.sh -e $ENVIRONMENT -a $APPLICATIONS -m restore
             fi
             ;;
        manual_validation)
-            bin/update_ecs_desired_count.sh -e ${{ github.event.inputs.environment }} -a ${{ github.event.inputs.applications }}  -m restore
+            bin/update_ecs_desired_count.sh -e $ENVIRONMENT -a $APPLICATIONS -m restore
             ;;
        update_ssm_parameters)
             if [ "$stepConclusion" == "failed" ]; then
-                bin/update_ecs_desired_count.sh -e ${{ github.event.inputs.environment }} -a ${{ github.event.inputs.applications }}  -m restore
+                bin/update_ecs_desired_count.sh -e $ENVIRONMENT -a $APPLICATIONS -m restore
             fi
             ;;
        restore_count)
              echo "Restore count failed...attempting a second time. Please check via AWS console that the ECS services are back up running."
-             bin/update_ecs_desired_count.sh -e ${{ github.event.inputs.environment }} -a ${{ github.event.inputs.applications }}  -m restore
+             bin/update_ecs_desired_count.sh -e $ENVIRONMENT -a $APPLICATIONS  -m restore
              ;;
    esac
 }
@@ -47,6 +49,14 @@ do
        ;;
       --step | -s)
           readonly STEP="$2"
+          shift
+       ;;
+      --environment | -e)
+          readonly ENVIRONMENT="$2"
+          shift
+       ;;
+      --applications | -a)
+          readonly APPLICATIONS="$2"
           shift
        ;;
        *)
