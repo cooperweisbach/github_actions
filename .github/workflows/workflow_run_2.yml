@@ -14,13 +14,13 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            console.log(context.payload);
-            console.log(context.payload.workflow_run.jobs_url);
-            let workflowRuns = await github.rest.actions.getWorkflowRun({
+            let workflowRunJobs = await github.rest.actions.listJobsForWorkflowRunAttempt({
               owner: context.repo.owner,
               repo: context.repo.repo,
               run_id: context.payload.workflow_run.id
+              attempt_number: context.payload.workflow_run.run_attempt
             })
+            console.log(workflowRunJobs);
             let url = context.payload.workflow_run.jobs_url;
             let jobsOutput = url.split(".com")[1];
             console.log(jobsOutput);
