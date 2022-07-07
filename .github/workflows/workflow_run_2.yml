@@ -19,10 +19,14 @@ jobs:
               repo: context.repo.repo,
               run_id: context.payload.workflow_run.id,
               attempt_number: context.payload.workflow_run.run_attempt
-            })
-            console.log(workflowRunJobs.data.jobs);
-            console.log(workflowRunJobs.data.jobs[0].steps);
-#            core.setOutput('stepsOutput', stepsOutput);
+            });
+            for(let jobStep of workflowRunJobs.data.jobs[0].steps){
+              let stepConclusion = jobStep.conclusion;
+              console.log(stepConclusion);
+              if(stepConclusion === 'cancelled' || stepConclusion === 'failed'){
+                core.setOutput('stepsOutput', jobStep.name);
+              }
+            }
             
             
 #       - name: find_failed_step
