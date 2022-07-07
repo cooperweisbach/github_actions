@@ -20,7 +20,7 @@ jobs:
               run_id: context.payload.workflow_run.id,
               attempt_number: context.payload.workflow_run.run_attempt
             })
-            console.log(workflowRunJobs);
+            console.log(workflowRunJobs.data.jobs);
             let url = context.payload.workflow_run.jobs_url;
             let jobsOutput = url.split(".com")[1];
             console.log(jobsOutput);
