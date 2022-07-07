@@ -47,3 +47,12 @@ jobs:
         with: 
           name: log_steps
           path: ./artifacts
+          
+      - name: Dump Contexts
+        run: |
+         echo 'Github Context ------'
+         echo '${{ toJSON(github) }}'
+         echo 'Job Context ------'
+         echo '${{ toJSON(job) }}'
+         echo 'Steps Context ------'
+         echo '${{ toJSON(steps) }}'
