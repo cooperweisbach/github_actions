@@ -1,0 +1,29 @@
+name: CD2
+on:
+  workflow_run:
+    workflows: [CI]
+    types: 
+      - completed
+      
+jobs:
+  execute:
+    if:  ${{ github.event.workflow_run.conclusion == 'failure' }}
+    runs-on: ubuntu-latest
+    steps: 
+      - name: get_job_steps
+        uses: actions/github-script@v6
+        with:
+          script: |
+            let jobsOutput = fetch(context.payload.workflow_run.jobs_url);
+            console.log(jobsOutput);
+            let stepsOutput = jobsOutput["steps"];
+            console.log(stepsOutput);
+#            core.setOutput('stepsOutput', stepsOutput);
+            
+            
+#       - name: find_failed_step
+#         runs: |
+#           ${{ steps.get_job_steps.outputs.stepsOutput
+        
+        
+#       - name: resolve_error
