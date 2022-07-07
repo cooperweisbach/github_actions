@@ -39,6 +39,7 @@ jobs:
           echo test, and deploy your project.
           ls
           pwd
+          sleep 15s
           
       - name: Log 2nd Critical Step
         run: | 
