@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
       - name: get_job_steps_conclusions
+        id: get_job_steps_conclusions
         uses: actions/github-script@v6
         with:
           script: |
@@ -21,11 +22,12 @@ jobs:
               attempt_number: context.payload.workflow_run.run_attempt
             });
             for(let jobStep of workflowRunJobs.data.jobs[0].steps){
+              console.log(jobStep);
               let stepConclusion = jobStep.conclusion;
               console.log(stepConclusion); 
-              console.log(jobStep.id); 
               if(stepConclusion === 'cancelled' || stepConclusion === 'failed'){
                 core.setOutput('stepsOutput', jobStep.name);
+                break;
               }
             }
             
