@@ -29,9 +29,11 @@ jobs:
               artifact_id: matchArtifact.id,
               archive_format: 'zip',
             });
-            console.log("Context Log");
-            console.log(context);
+            console.log("Context Log - Jobs Url");
+            console.log(context.payload.workflow_run.jobs_url);
             core.setOutput('artifact_id', matchArtifact.id);
+            console.log("Core Log");
+            console.log(core);
             let fs = require('fs');
             fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/log_steps.zip`, Buffer.from(download.data));
   run_on_failure:
