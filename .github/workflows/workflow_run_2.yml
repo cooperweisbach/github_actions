@@ -14,7 +14,15 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            let jobsOutput = fetch(context.payload.workflow_run.jobs_url);
+            console.log(context.payload);
+            console.log(context.payload.workflow_run.jobs_url);
+            let workflowRuns = await github.rest.actions.getWorkflowRun({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.payload.workflow_run.id
+            })
+            let url = context.payload.workflow_run.jobs_url;
+            let jobsOutput = url.split(".com")[1];
             console.log(jobsOutput);
             let stepsOutput = jobsOutput["steps"];
             console.log(stepsOutput);
