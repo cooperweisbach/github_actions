@@ -22,6 +22,7 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
+        id: "first"
         run: echo Hello, world!
 
       - name: Log 1st Critical Step
@@ -34,6 +35,7 @@ jobs:
           path: ./artifacts
 
       - name: Run a multi-line script
+        id: "second"
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
@@ -42,6 +44,7 @@ jobs:
           sleep 15s
           
       - name: Log 2nd Critical Step
+        id: "third"
         run: | 
           echo "Step 2" >> ./artifacts/log_steps
       - uses: actions/upload-artifact@v3
@@ -50,6 +53,7 @@ jobs:
           path: ./artifacts
           
       - name: Dump Contexts
+        id: "fourth"
         run: |
          echo 'Github Context ------'
          echo '${{ toJSON(github) }}'
