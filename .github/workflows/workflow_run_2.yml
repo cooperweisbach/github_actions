@@ -3,11 +3,11 @@ on:
   workflow_run:
     workflows: [CI]
     types: 
-      - requested
+      - completed
       
 jobs:
   execute:
-    if:  ${{ github.event.workflow_run.conclusion == 'failure' }}
+#     if:  ${{ github.event.workflow_run.conclusion == 'failure' }}
     runs-on: ubuntu-latest
     steps: 
       - name: get_job_steps
