@@ -21,7 +21,7 @@ jobs:
               attempt_number: context.payload.workflow_run.run_attempt
             })
             console.log(workflowRunJobs.data.jobs);
-            console.log(workflowRunJobs.data.jobs.steps);
+            console.log(workflowRunJobs.data.jobs[0].steps);
 #            core.setOutput('stepsOutput', stepsOutput);
             
             
