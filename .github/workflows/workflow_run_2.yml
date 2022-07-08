@@ -31,21 +31,25 @@ jobs:
                 break;
               }
             }
+            console.log("Getting artifacts");
             
             let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
               owner: context.repo.owner,
               repo: context.repo.repo,
               run_id: context.payload.workflow_run.id,
             });
+            console.log("Got all artifacts");
             let matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
               return artifact.name == "action_inputs"
             })[0];
+            console.log("Matched artifact");
             let download = await github.rest.actions.downloadArtifact({
               owner: context.repo.owner,
               repo: context.repo.repo,
               artifact_id: matchArtifact.id,
               archive_format: 'zip',
             });
+            console.log("Downloaded artifact");
             
             let fs = require('fs');
             fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/action-inputs.zip`, Buffer.from(download.data));
