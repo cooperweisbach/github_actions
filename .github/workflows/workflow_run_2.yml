@@ -32,10 +32,41 @@ jobs:
               }
             }
             
+            let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.payload.workflow_run.id,
+            });
+            let matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "action_inputs"
+            })[0];
+            let download = await github.rest.actions.downloadArtifact({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              artifact_id: matchArtifact.id,
+              archive_format: 'zip',
+            });
+            
+            let fs = require('fs');
+            fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/action-inputs.zip`, Buffer.from(download.data));
+            
+      - name: unzip_artifact
+        run: |
+          unzip ./action_inputs.zip
+          
+      - name: parse_artifact
+        id: parse_artifact
+        uses: actions/github-script@v6
+        with:
+          script: |
+             let fs = require('fs');
+             core.setOutput('inputs', String(fs.readFileSync('./action-inuts')));
             
       - name: action_based_on_faulty_step
         run: |
+           updatedEnv=$( steps.parse_artifact.outputs.inputs | grep 'env' | awk -F ':' '{print $2}' )
+           applications=$( steps.parse_artifact.outputs.inputs | grep 'apps' | awk -F ':' '{print $2}' )
            chmod 700 ./bin/action_based_on_faulty_step.sh
-           ./bin/action_based_on_faulty_step.sh -s steps.get_job_steps_conclusions.outputs.stepsOutput -c steps.get_job_steps_conclusions.outputs.stepConclusion
+           ./bin/action_based_on_faulty_step.sh -s steps.get_job_steps_conclusions.outputs.stepsOutput -c steps.get_job_steps_conclusions.outputs.stepConclusion -e "$updatedEnv" -a "$applications"
         
       
