@@ -52,11 +52,11 @@ jobs:
             });
             
             let fs = require('fs');
-            fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/action-inputs.zip`, Buffer.from(download.data));
+            fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/artifact_inputs.zip`, Buffer.from(download.data));
             
       - name: unzip_artifact
         run: |
-          unzip ./action_inputs.zip
+          unzip ./artifact_inputs.zip
           
       - name: parse_artifact
         id: parse_artifact
@@ -64,7 +64,7 @@ jobs:
         with:
           script: |
              let fs = require('fs');
-             core.setOutput('inputs', String(fs.readFileSync('./action-inuts')));
+             core.setOutput('inputs', String(fs.readFileSync('./artifact_inputs')));
             
       - name: action_based_on_faulty_step
         run: |
