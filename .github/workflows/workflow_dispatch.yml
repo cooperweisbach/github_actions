@@ -44,7 +44,7 @@ jobs:
         run: |
           echo "Manual Intervention"
           chmod 700 ./bin/manual_intervention.sh
-          ./bin/manual_intervention.sh -g ${GITHUB_TOKEN} -t ${github.actor}
+          ./bin/manual_intervention.sh -g ${GITHUB_TOKEN} -t ${ github.actor }
           
       # Runs a single command using the runners shell
       - name: update_ssm_parameters
