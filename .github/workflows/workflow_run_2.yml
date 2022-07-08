@@ -25,7 +25,7 @@ jobs:
               console.log(jobStep);
               let stepConclusion = jobStep.conclusion;
               console.log(stepConclusion); 
-              if(stepConclusion === 'cancelled' || stepConclusion === 'failed'){
+              if(stepConclusion === 'cancelled' || stepConclusion === 'failure'){
                 core.setOutput('stepsOutput', jobStep.name);
                 core.setOutput('stepConclusion', stepConclusion);
                 break;
