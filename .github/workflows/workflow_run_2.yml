@@ -76,7 +76,7 @@ jobs:
           bin/action_based_on_faulty_step.sh \
             -s ${{ steps.get_job_steps_conclusions.outputs.stepsOutput }} \
             -c ${{ steps.get_job_steps_conclusions.outputs.stepConclusion }} \
-            -e $( grep 'env' "${{ steps.parse_artifact.outputs.inputs }}" | awk -F ':' '{print $2}' ) \
-            -a $( grep 'applications' "${{ steps.parse_artifact.outputs.inputs }}" | awk -F ':' '{print $2}' )
+            -e $( echo "${{ steps.parse_artifact.outputs.inputs }}" | grep env | awk -F ':' '{print $2}' ) \
+            -a $( echo "${{ steps.parse_artifact.outputs.inputs }}" | grep applications | awk -F ':' '{print $2}' )
         
       
