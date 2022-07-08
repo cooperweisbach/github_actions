@@ -24,7 +24,7 @@ function determine_action {
 #              bin/update_ecs_desired_count.sh -e $ENVIRONMENT -a $APPLICATIONS -m restore
             fi
             ;;
-       manual_validation)
+       manual_intervention)
                echo "Made it to faulty Manual Validation"
 #             bin/update_ecs_desired_count.sh -e $ENVIRONMENT -a $APPLICATIONS -m restore
             ;;
