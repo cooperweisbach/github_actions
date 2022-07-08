@@ -20,44 +20,42 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
+      - name: create_input_artifacts
+        id: "create_input_artifacts"
+        run: |
+          mkdir -p artifacts
+          echo "env:$inputs.environment" > ./artifacts/artifact_inputs
+          echo "applications:$inputs.applications" >> ./artifacts/artifact_inputs
+      - uses: actions/upload-artifact@v3
+        with:
+          name: artifact_inputs
+          path: ./artifacts/
+        
       # Runs a single command using the runners shell
-      - name: Run a one-line script
-        id: "first"
-        run: echo Hello, world!
-
-      - name: Log 1st Critical Step
-        run: | 
-          mkdir -p ./artifacts
-          echo "Step 1" >> ./artifacts/log_steps
-      - uses: actions/upload-artifact@v3
-        with: 
-          name: log_steps
-          path: ./artifacts
-
-      - name: Run a multi-line script
-        id: "second"
+      - name: stop_ecs
+        id: "stop_ecs"
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
-          ls
-          pwd
-          sleep 15s
-          
-      - name: Log 2nd Critical Step
-        id: "third"
-        run: | 
-          echo "Step 2" >> ./artifacts/log_steps
-      - uses: actions/upload-artifact@v3
-        with: 
-          name: log_steps
-          path: ./artifacts
-          
-      - name: Dump Contexts
-        id: "fourth"
+          echo "Stopping ECS"
+          sleep 5s
+
+      # Runs a single command using the runners shell
+      - name: manual_intervention
+        id: "manual_intervention"
         run: |
-         echo 'Github Context ------'
-         echo '${{ toJSON(github) }}'
-         echo 'Job Context ------'
-         echo '${{ toJSON(job) }}'
-         echo 'Steps Context ------'
-         echo '${{ toJSON(steps) }}'
+          echo "Manual Intervention"
+          chmod 700 ./bin/manual_intervention.sh
+          ./bin/manual_intervention.sh -g ${GITHUB_TOKEN} -t ${github.actor}
+          
+      # Runs a single command using the runners shell
+      - name: update_ssm_parameters
+        id: "update_ssm_parameters"
+        run: |
+          echo "Updating SSM Parameters"
+          sleep 5s
+          
+      # Runs a single command using the runners shell
+      - name: restore_ecs
+        id: "restore_ecs"
+        run: |
+          echo "Restoring ECS"
+          sleep 5s
