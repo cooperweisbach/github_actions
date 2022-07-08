@@ -24,8 +24,8 @@ jobs:
         id: "create_input_artifacts"
         run: |
           mkdir -p artifacts
-          echo "env:$inputs.environment" > ./artifacts/artifact_inputs
-          echo "applications:$inputs.applications" >> ./artifacts/artifact_inputs
+          echo "env:${{ inputs.environment }}" > ./artifacts/artifact_inputs
+          echo "applications:${{ inputs.applications }}" >> ./artifacts/artifact_inputs
       - uses: actions/upload-artifact@v3
         with:
           name: artifact_inputs
