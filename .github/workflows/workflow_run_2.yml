@@ -32,7 +32,7 @@ jobs:
               }
             }
             console.log("Getting artifacts");
-            
+            console.log(context.payload.workflow_run.id);
             let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
               owner: context.repo.owner,
               repo: context.repo.repo,
