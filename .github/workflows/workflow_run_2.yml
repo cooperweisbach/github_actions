@@ -68,7 +68,7 @@ jobs:
             
       - name: action_based_on_faulty_step
         run: |
-           pwd
+           echo pwd
            updatedEnv=$( steps.parse_artifact.outputs.inputs | grep 'env' | awk -F ':' '{print $2}' )
            applications=$( steps.parse_artifact.outputs.inputs | grep 'apps' | awk -F ':' '{print $2}' )
            chmod 700 bin/action_based_on_faulty_step.sh
