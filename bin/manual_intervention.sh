@@ -39,7 +39,7 @@ function poll_for_resolution {
        if [ $iterator = 2 ]; then
          curl --silent \
          -X PATCH -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${GITHUB_TOKEN}" \
-         https://api.github.com/repos/cooperweisbach/github_actions/issues$1 \
+         https://api.github.com/repos/cooperweisbach/github_actions/issues/$1 \
          -d '{"state":"closed"}'
          echo "Manual action timed out...issue wasn't resolved in under 1 minute"
          exit 255
