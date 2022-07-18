@@ -21,22 +21,22 @@ function determine_action {
        stop_ecs)
             if [ "$stepConclusion" == "cancelled" ]; then
               echo "Made it to Cancelled - stop_ecs"
-#              bin/update_ecs_desired_count.sh -e $ENVIRONMENT -a $APPLICATIONS -m restore
+              bin/update_ecs_desired_count.sh -e $ENVIRONMENT -a $APPLICATIONS -m restore
             fi
             ;;
        manual_intervention)
-               echo "Made it to faulty Manual Validation"
-#             bin/update_ecs_desired_count.sh -e $ENVIRONMENT -a $APPLICATIONS -m restore
+             echo "Made it to faulty Manual Validation"
+             bin/update_ecs_desired_count.sh -e $ENVIRONMENT -a $APPLICATIONS -m restore
             ;;
        update_ssm_parameters)
             if [ "$stepConclusion" == "failed" ]; then
                   echo "Made it to Failed - Update_SSM_Parameters"
-#                 bin/update_ecs_desired_count.sh -e $ENVIRONMENT -a $APPLICATIONS -m restore
+                  bin/update_ecs_desired_count.sh -e $ENVIRONMENT -a $APPLICATIONS -m restore
             fi
             ;;
        restore_count)
              echo "Restore count failed...attempting a second time. Please check via AWS console that the ECS services are back up running."
-#              bin/update_ecs_desired_count.sh -e $ENVIRONMENT -a $APPLICATIONS  -m restore
+             bin/update_ecs_desired_count.sh -e $ENVIRONMENT -a $APPLICATIONS  -m restore
              ;;
    esac
 }
