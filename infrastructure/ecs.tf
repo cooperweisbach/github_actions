@@ -48,7 +48,7 @@ resource "aws_ecs_service" "sample-service" {
   desired_count   = 1
   launch_type = "FARGATE"
   network_configuration {
-    subnets = [aws_subnet.private_subnet[0], aws_subnet.private_subnet[1]]
+    subnets = [aws_subnet.private_subnet[0].id, aws_subnet.private_subnet[1].id]
     security_groups = ["sg-082bc0c5c9b14b777"]
   }
 }
