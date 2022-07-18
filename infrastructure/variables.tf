@@ -26,3 +26,8 @@ variable "num_of_priv_subnets" {
     type = number
     default = 2
 }
+
+variable "ecs_service_names" {
+  type = list
+  default = ["account", "operations"]
+}
