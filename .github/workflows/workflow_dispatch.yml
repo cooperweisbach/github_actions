@@ -32,7 +32,12 @@ jobs:
         with:
           name: artifact_inputs
           path: ./artifacts/
-        
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.NONPROD_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.NONPROD_AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2 
       # Runs a single command using the runners shell
       - name: stop_ecs
         id: "stop_ecs"
