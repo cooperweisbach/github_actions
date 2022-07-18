@@ -6,10 +6,10 @@ on:
         type: choice
         required: true
         options:
-          - dev
-          - qa
-          - stg
-          - trn
+          - dev1
+          - qa1
+          - stg1
+          - trn1
       applications:
         required: true
       credential:
