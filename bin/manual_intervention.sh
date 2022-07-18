@@ -36,7 +36,7 @@ function poll_for_resolution {
        echo $resolved
 
        iterator=$( expr $iterator + 1 )
-       if [ $iterator = 2 ]; then
+       if [ $iterator = 20 ]; then
          curl --silent \
          -X PATCH -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${GITHUB_TOKEN}" \
          https://api.github.com/repos/cooperweisbach/github_actions/issues/$1 \
