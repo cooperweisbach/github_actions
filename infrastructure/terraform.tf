@@ -20,4 +20,5 @@ terraform {
 
 provider "aws" {
     region = "us-west-2"
+    sts_region = "us-west-2"
 }
