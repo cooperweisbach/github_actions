@@ -12,6 +12,8 @@ on:
           - trn
       applications:
         required: true
+      credential:
+        required: true
         
 jobs:
   execute:
@@ -35,8 +37,8 @@ jobs:
       - name: stop_ecs
         id: "stop_ecs"
         run: |
-          echo "Stopping ECS"
-          sleep 5s
+          chmod 700 bin/update_ecs_desired_count.sh
+          bin/update_ecs_desired_count.sh -e ${{ inputs.environment }} -a ${{ inputs.applications }} -m reduce
 
       # Runs a single command using the runners shell
       - name: manual_intervention
@@ -50,12 +52,11 @@ jobs:
       - name: update_ssm_parameters
         id: "update_ssm_parameters"
         run: |
-          echo "Updating SSM Parameters"
-          sleep 5s
+          chmod 700 bin/update_ssm_credential.sh
+          bin/update_ssm_credential.sh -e ${{ inputs.environment }} -a ${{ inputs.applications }} -c ${{ inputs.credential }} -v ${{ secrets.CREDENTIAL_TO_UPDATE_VALUE}}
           
       # Runs a single command using the runners shell
       - name: restore_ecs
         id: "restore_ecs"
         run: |
-          echo "Restoring ECS"
-          sleep 5s
+          bin/update_ecs_desired_count.sh -e ${{ inputs.environment }} -a ${{ inputs.applications }} -m return
