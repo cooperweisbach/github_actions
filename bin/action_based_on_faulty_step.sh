@@ -16,7 +16,7 @@ function usage {
 function determine_action {
   local stepName="$1"
   local stepConclusion="$2"
-  
+  chmod 700 bin/update_ecs_desired_count.sh
   case $stepName in 
        stop_ecs)
             if [ "$stepConclusion" == "cancelled" ]; then
