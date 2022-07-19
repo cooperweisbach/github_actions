@@ -59,13 +59,11 @@ function change_desired_count {
        do
           if [ ${MODE} == "reduce" ]; then
 	      echo "reducing ecs count for ${app} to 0"
-              aws ecs update-service --cluster es-springboot-${ENVIRONMENT}-cluster --service ${app} --desired-count 0 
-#             > /dev/null
+              aws ecs update-service --cluster es-springboot-${ENVIRONMENT}-cluster --service ${app} --desired-count 0 --region us-west-2  > /dev/null
           else
               returnValue=$( grep "task_count" ./app/${app}/infrastructure/unprotected/${ENVIRONMENT}/main.tf | awk -F '=' '{print $2}' | sed 's/ //g' )
 	      echo "returning ecs count for ${app} to ${returnValue}"
-              aws ecs update-service --cluster es-springboot-${ENVIRONMENT}-cluster --service ${app} --desired-count ${returnValue} 
-#	      > /dev/null
+              aws ecs update-service --cluster es-springboot-${ENVIRONMENT}-cluster --service ${app} --desired-count ${returnValue} --region us-west-2  > /dev/null
          fi
        done
 }
