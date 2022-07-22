@@ -43,17 +43,6 @@ function validate_args {
     fi
 }
 
-function validate_apps_exist {
-    for app in ${APPLICATIONS[@]}
-      do
-	echo $app
-        if [ ! -d "./app/${app}" ]; then
-	    echo "${app} not found"
-            exit 1
-        fi
-      done
-}
-
 function change_desired_count {
     for app in ${APPLICATIONS[@]}
        do
@@ -103,5 +92,4 @@ done
 #############
 
 validate_args
-validate_apps_exist
 change_desired_count
