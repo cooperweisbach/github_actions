@@ -48,37 +48,6 @@ function validate_args {
     fi
 }
 
-#This function will check that all the apps that have been entered as input exist in the source directory.
-#This function should run before validate_parameters_exist.
-#This is necessary because no credentials will exist for an invalid app.
-
-function validate_apps_exist {
-    for app in ${APPLICATIONS[@]}
-      do
-	      echo $app
-        if [ ! -d "./app/${app}" ]; then
-	          echo "${app} not found"
-            exit 1
-        fi
-      done
-}
-
-
-#This function will check that all the parameters that will potentially be updated, actually exist using the AWS CLI.
-#This function should run before perform_update.
-#This is necessary to ensure that the entire transaction can occur.
-
-function validate_parameters_exist {
-  for app in ${APPLICATIONS[@]}
-    do     
-      set +x
-      echo "AWS SSM Get Parameter Operation: ${app} - ${ENVIRONMENT} - ${CREDENTIAL}"
-               #Get the parameter from AWS and silence the output through redirection 
-      aws ssm get-parameter --name /enterprise-services/${app}/${ENVIRONMENT}/${CREDENTIAL} > /dev/null
-      set -x
-    done
-}
-
 #This function uses the AWS CLI to update the value of the desired parameters with a new value.
 
 function perform_update {
@@ -132,6 +101,4 @@ done
 #############
 
 validate_args
-validate_apps_exist
-validate_parameters_exist
 perform_update
