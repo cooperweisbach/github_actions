@@ -38,6 +38,12 @@ jobs:
           aws-access-key-id: ${{ secrets.NONPROD_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.NONPROD_AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-2 
+          
+      - name: perform_validations
+        run: |
+          chmod 700 bin/validate_credential_update_inputs.sh
+          bin/validate_credential_update_inputs.sh -e ${{ inputs.environment }} -a ${{ inputs.applications }} -c ${{ inputs.credential }}
+          
       # Runs a single command using the runners shell
       - name: stop_ecs
         id: "stop_ecs"
