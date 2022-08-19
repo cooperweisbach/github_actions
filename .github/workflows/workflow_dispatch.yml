@@ -19,6 +19,13 @@ jobs:
   execute:
     runs-on: ubuntu-latest
     steps:
+      - name: validate user input
+        run: |
+          re="[[:space:]]+"
+          if [[${{ github.event.inputs.applications }} =~ $re ]]; then
+            echo "Input for applications variable is formatted incorrectly. Seperate application names with a comma only: contact,case,operations"
+            exit 255
+          fi  
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
